@@ -1,58 +1,139 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Performance Dashboard（業績管理ダッシュボード）
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+会社の業績データを記録・可視化するためのWebアプリケーションです。  
+月次実績の入力、KPIダッシュボード、CSV入出力、データエクスポートなどを提供します。
 
-## About Laravel
+## 主な機能
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **ダッシュボード** — KPIカード、期間サマリー、セグメント別テーブル、前月比・前期比の自動算出
+- **月次実績管理** — 月別データの入力・編集、証跡ファイルのアップロード、チャート表示
+- **CSV入出力** — 簡易形式・詳細形式でのCSVダウンロード、CSVインポート
+- **データエクスポート** — カテゴリ、指標、年度、月次実績、ユーザー情報の一括エクスポート
+- **管理画面** — ユーザー管理（ロール・権限）、カテゴリ・指標マスタ管理、アクティビティログ閲覧
+- **Google OAuth認証** — Google Workspaceドメインによるアクセス制限対応
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 技術スタック
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| 区分 | 技術 |
+|------|------|
+| バックエンド | PHP 8.3+ / Laravel 13 |
+| フロントエンド | Vite / Tailwind CSS v4 / Axios / Chart.js |
+| データベース | MySQL（開発時はSQLiteも可） |
+| 認証 | Google OAuth（Laravel Socialite） |
+| ログ | spatie/laravel-activitylog |
 
-## Learning Laravel
+## セットアップ
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 必要な環境
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP 8.3以上
+- Composer
+- Node.js / npm
+- MySQL（または SQLite）
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### インストール手順
 
 ```bash
-composer require laravel/boost --dev
+# リポジトリをクローン
+git clone https://github.com/ohira-t/performance-dashboard.git
+cd performance-dashboard
 
-php artisan boost:install
+# 依存パッケージのインストール
+composer install
+npm install
+
+# 環境設定ファイルを作成
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### データベース設定
 
-## Contributing
+`.env` にデータベース接続情報を設定します。
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=performance_dashboard
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## Code of Conduct
+```bash
+# マイグレーション & シーダー実行
+php artisan migrate
+php artisan db:seed
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Google OAuth設定（任意）
 
-## Security Vulnerabilities
+Google Cloud Consoleで OAuth 2.0 クライアントIDを作成し、`.env` に追加します。
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```dotenv
+GOOGLE_CLIENT_ID=your-client-id
+GOOGLE_CLIENT_SECRET=your-client-secret
+GOOGLE_REDIRECT_URI=https://your-domain/auth/google/callback
+GOOGLE_HOSTED_DOMAIN=your-workspace-domain.com
+```
 
-## License
+ローカル開発では `/dev-login` にアクセスすることで、Google認証なしでログインできます。
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 起動
+
+```bash
+# 開発サーバー起動（サーバー + Vite + キュー + ログ同時起動）
+composer dev
+
+# または個別に起動
+php artisan serve
+npm run dev
+```
+
+http://localhost:8000 にアクセスしてください。
+
+## ディレクトリ構成（主要部分）
+
+```
+app/
+├── Helpers/           # DashboardHelper, StorageHelper, SecurityHelper
+├── Http/
+│   ├── Controllers/
+│   │   ├── DashboardController.php      # ダッシュボード
+│   │   ├── MonthlyResultController.php  # 月次実績
+│   │   ├── DataExportController.php     # データエクスポート
+│   │   └── Admin/                       # 管理画面
+│   └── Middleware/
+│       └── CheckPermission.php          # 権限チェック
+├── Models/
+│   ├── Category.php        # カテゴリ
+│   ├── Metric.php          # 指標
+│   ├── FiscalYear.php      # 年度
+│   ├── MonthlyResult.php   # 月次実績
+│   ├── EvidenceDetail.php  # 証跡
+│   ├── User.php            # ユーザー
+│   ├── Role.php            # ロール
+│   └── Permission.php      # 権限
+database/
+├── migrations/        # テーブル定義
+└── seeders/           # 初期データ（ロール・権限、年度マスタ、管理者ユーザー）
+resources/views/
+├── dashboard.blade.php           # ダッシュボード画面
+├── monthly-results/index.blade.php  # 月次実績画面
+├── admin/                        # 管理画面
+└── layouts/app.blade.php         # 共通レイアウト
+```
+
+## シーダー
+
+| シーダー | 内容 |
+|----------|------|
+| RolePermissionSeeder | ロール・権限の初期定義 |
+| AdminUserSeeder | 管理者ユーザーの作成（`ADMIN_EMAIL` 環境変数を使用） |
+| FiscalYearSeeder | 年度マスタの初期投入 |
+
+管理者ユーザーを作成する場合は、`.env` に `ADMIN_EMAIL` を設定してから `db:seed` を実行してください。
+
+## ライセンス
+
+MIT License
