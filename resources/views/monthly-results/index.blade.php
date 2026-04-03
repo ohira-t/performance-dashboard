@@ -458,7 +458,6 @@
 @endpush
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
 const fiscalYearId = {{ $fiscalYear->id ?? 'null' }};
 let currentMetricId = null;

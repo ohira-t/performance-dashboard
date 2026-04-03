@@ -1152,7 +1152,7 @@
     <!-- Choices.js -->
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <!-- Axios (AJAX用) -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.7.0/dist/axios.min.js"></script>
     
     <script>
         // CSRFトークンをAxiosのデフォルトヘッダーに設定
