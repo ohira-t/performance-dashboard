@@ -140,7 +140,7 @@ class DashboardHelper
     /**
      * ビジネスセグメントの分類
      */
-    public static function categorizeBusinessSegment(string $categoryName): string
+    public static function categorizeBusinessSegment(string $categoryName): ?string
     {
         if ($categoryName === '全体') {
             return '収益';
@@ -152,7 +152,7 @@ class DashboardHelper
             return '新規事業';
         }
         
-        return null; // その他は表示しない
+        return null;
     }
 }
 
