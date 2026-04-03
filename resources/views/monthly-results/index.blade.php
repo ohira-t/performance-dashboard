@@ -700,8 +700,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, true); // capture phaseで実行して、既存のイベントリスナーの前に実行
         
-        // フォーカスアウト時にカンマを追加
+        // フォーカスアウト時にカンマを追加 + 不正値チェック
         input.addEventListener('blur', function() {
+            const raw = this.value.replace(/,/g, '').trim();
+            if (raw !== '' && (isNaN(parseFloat(raw)) || Math.abs(parseFloat(raw)) > 9999999999)) {
+                this.style.borderColor = '#c53030';
+                this.style.boxShadow = '0 0 0 2px rgba(197,48,48,0.15)';
+                this.title = raw === '' ? '' : '有効な数値を入力してください（上限: ±99億）';
+            } else {
+                this.style.borderColor = '';
+                this.style.boxShadow = '';
+                this.title = '';
+            }
             this.value = formatCurrency(this.value);
         });
     });

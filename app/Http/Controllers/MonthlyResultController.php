@@ -79,9 +79,17 @@ class MonthlyResultController extends Controller
             'fiscal_year_id' => 'required|exists:fiscal_years,id',
             'metric_id' => 'required|exists:metrics,id',
             'target_month' => 'required|date',
-            'value' => 'nullable|numeric',
+            'value' => 'nullable|numeric|between:-9999999999,9999999999',
             'comment' => 'nullable|string|max:1000',
         ]);
+
+        $fiscalYear = FiscalYear::findOrFail($request->fiscal_year_id);
+        $targetMonth = Carbon::parse($request->target_month);
+        $start = Carbon::parse($fiscalYear->start_date)->startOfMonth();
+        $end = Carbon::parse($fiscalYear->end_date)->endOfMonth();
+        if ($targetMonth->lt($start) || $targetMonth->gt($end)) {
+            return response()->json(['success' => false, 'message' => '対象月が年度の範囲外です。'], 422);
+        }
 
         $result = MonthlyResult::updateOrCreate(
             [
@@ -135,7 +143,7 @@ class MonthlyResultController extends Controller
             'fiscal_year_id' => 'required|exists:fiscal_years,id',
             'metric_id' => 'required|exists:metrics,id',
             'target_month' => 'required|date',
-            'file' => 'required|file|max:10240', // 10MB制限
+            'file' => 'required|file|max:10240|mimes:pdf,jpg,jpeg,png,gif,xlsx,xls,csv,doc,docx,txt',
         ]);
 
         $file = $request->file('file');
@@ -202,9 +210,9 @@ class MonthlyResultController extends Controller
         $result = MonthlyResult::findOrFail($id);
         
         $request->validate([
-            'details' => 'nullable|array',
+            'details' => 'nullable|array|max:100',
             'details.*.detail' => 'required|string|max:500',
-            'details.*.amount' => 'required|numeric|min:0',
+            'details.*.amount' => 'required|numeric|between:-9999999999,9999999999',
             'comment' => 'nullable|string|max:1000',
         ]);
         

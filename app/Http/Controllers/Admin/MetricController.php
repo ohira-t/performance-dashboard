@@ -64,10 +64,11 @@ class MetricController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'display_name' => 'nullable|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'type' => 'required|in:currency,quantity,percent',
             'unit' => 'nullable|string|max:50',
-            'sort_order' => 'nullable|integer|min:0',
+            'sort_order' => 'nullable|integer|min:0|max:9999',
         ]);
 
         // sort_orderが指定されていない場合は最大値+1
@@ -110,10 +111,11 @@ class MetricController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'display_name' => 'nullable|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'type' => 'required|in:currency,quantity,percent',
             'unit' => 'nullable|string|max:50',
-            'sort_order' => 'nullable|integer|min:0',
+            'sort_order' => 'nullable|integer|min:0|max:9999',
         ]);
 
         $metric->update([

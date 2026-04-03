@@ -48,12 +48,11 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:categories,name',
             'parent_id' => 'nullable|exists:categories,id',
-            'sort_order' => 'nullable|integer|min:0',
+            'sort_order' => 'nullable|integer|min:0|max:9999',
         ]);
 
-        // 循環参照チェック
         if ($request->parent_id) {
             try {
                 $parent = Category::find($request->parent_id);
@@ -111,9 +110,9 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
             'parent_id' => 'nullable|exists:categories,id',
-            'sort_order' => 'nullable|integer|min:0',
+            'sort_order' => 'nullable|integer|min:0|max:9999',
         ]);
 
         // 自分自身を親に設定しようとしている場合はエラー
