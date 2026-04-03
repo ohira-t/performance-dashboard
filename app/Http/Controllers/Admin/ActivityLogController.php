@@ -13,7 +13,7 @@ class ActivityLogController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Activity::with(['causer', 'subject'])
+        $query = Activity::with(['causer'])
             ->latest();
 
         // フィルター: ユーザー
