@@ -187,7 +187,7 @@ use App\Helpers\DashboardHelper;
                 <div class="card-body p-0">
                     @if(isset($chartData) && !empty($chartData['months']) && count($chartData['months']) > 0)
                         <div style="padding: 1.5rem;">
-                            <canvas id="performanceChart" style="height: 300px;"></canvas>
+                            <canvas id="performanceChart" style="height: clamp(250px, 30vw, 400px);"></canvas>
                         </div>
                     @else
                         <div class="alert alert-info mb-0" style="margin: 1.5rem;">
@@ -217,12 +217,12 @@ use App\Helpers\DashboardHelper;
                         @foreach($segments as $segmentIndex => $segment)
                             <div class="accordion-item border-0" style="{{ $segmentIndex < count($segments) - 1 ? 'border-bottom: 1px solid #e5e7eb;' : '' }}">
                                 <h2 class="accordion-header" id="heading{{ $segmentIndex }}">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $segmentIndex }}" aria-expanded="false">
+                                    <button class="accordion-button {{ $segmentIndex === 0 ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $segmentIndex }}" aria-expanded="{{ $segmentIndex === 0 ? 'true' : 'false' }}">
                                         <i class="bi bi-folder me-2" style="font-size: 0.875rem;"></i>
                                         <span style="font-weight: 400;">{{ $segment['name'] }}</span>
                                     </button>
                                 </h2>
-                                <div id="collapse{{ $segmentIndex }}" class="accordion-collapse collapse" data-bs-parent="#segmentAccordion">
+                                <div id="collapse{{ $segmentIndex }}" class="accordion-collapse collapse {{ $segmentIndex === 0 ? 'show' : '' }}" data-bs-parent="#segmentAccordion">
                                     <div class="accordion-body">
                                         <!-- グラフ -->
                                         @if(isset($segment['chartData']) && !empty($segment['chartData']['months']))
@@ -240,7 +240,7 @@ use App\Helpers\DashboardHelper;
                                                         </form>
                                                     @endif
                                                 </div>
-                                                <div style="height: 300px; position: relative;">
+                                                <div style="height: clamp(220px, 25vw, 350px); position: relative;">
                                                     <canvas id="segmentChart{{ $segmentIndex }}"></canvas>
                                                 </div>
                                             </div>
@@ -368,12 +368,12 @@ use App\Helpers\DashboardHelper;
                         @foreach($operationSegments as $segmentIndex => $segment)
                             <div class="accordion-item border-0" style="{{ $segmentIndex < count($operationSegments) - 1 ? 'border-bottom: 1px solid #e5e7eb;' : '' }}">
                                 <h2 class="accordion-header" id="operationHeading{{ $segmentIndex }}">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#operationCollapse{{ $segmentIndex }}" aria-expanded="false">
+                                    <button class="accordion-button {{ $segmentIndex === 0 ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#operationCollapse{{ $segmentIndex }}" aria-expanded="{{ $segmentIndex === 0 ? 'true' : 'false' }}">
                                         <i class="bi bi-folder me-2" style="font-size: 0.875rem;"></i>
                                         <span style="font-weight: 400;">{{ $segment['name'] }}</span>
                                     </button>
                                 </h2>
-                                <div id="operationCollapse{{ $segmentIndex }}" class="accordion-collapse collapse" data-bs-parent="#operationSegmentAccordion">
+                                <div id="operationCollapse{{ $segmentIndex }}" class="accordion-collapse collapse {{ $segmentIndex === 0 ? 'show' : '' }}" data-bs-parent="#operationSegmentAccordion">
                                     <div class="accordion-body">
                                         <!-- グラフ -->
                                         @if(isset($segment['chartData']) && !empty($segment['chartData']['months']))
@@ -391,8 +391,8 @@ use App\Helpers\DashboardHelper;
                                                         </form>
                                                     @endif
                                                 </div>
-                                                <div style="height: 300px; position: relative;">
-                                                    <canvas id="operationSegmentChart{{ $segmentIndex }}" style="height: 300px;"></canvas>
+                                                <div style="height: clamp(220px, 25vw, 350px); position: relative;">
+                                                    <canvas id="operationSegmentChart{{ $segmentIndex }}"></canvas>
                                                 </div>
                                             </div>
                                         @endif

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'GLUG業績管理')</title>
-    <link rel="icon" href="data:,">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 193.89 193.89'><path fill='%231d1d1f' d='M182.42,51.23l-70.11,43.33c-1.1,.68-.62,2.38,.68,2.38h41.2c1.45,0,2.62,1.21,2.55,2.66-1.45,31.72-27.71,57.08-59.79,57.08-18.49,0-35.05-8.43-46.04-21.65-.8-.96-2.19-1.18-3.25-.52l-29.81,18.42c17.88,25.18,47.47,41.5,80.77,40.93,52.32-.89,94.8-43.72,95.27-96.04,.15-16.85-4.02-32.73-11.47-46.6Z'/><path fill='%23ffda01' d='M11.48,142.66l70.11-43.33c1.1-.68,.62-2.38-.68-2.38H39.71c-1.45,0-2.62-1.21-2.55-2.66,1.45-31.72,27.71-57.08,59.79-57.08,18.49,0,35.05,8.43,46.04,21.65,.8,.96,2.19,1.18,3.25,.52l29.81-18.42C158.16,15.77,128.57-.55,95.28,.01,42.95,.9,.47,43.73,0,96.06c-.15,16.85,4.02,32.73,11.47,46.6Z'/></svg>" type="image/svg+xml">
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -33,10 +33,6 @@
             --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
             --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
             --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.1);
-        }
-        
-        * {
-            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
         
         body {
@@ -420,7 +416,7 @@
         
         .form-control:focus {
             border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(49, 151, 149, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
         }
         
         /* プレースホルダー */
@@ -712,6 +708,26 @@
             overflow: hidden;
         }
         
+        .sidebar.collapsed .sidebar-menu-link {
+            position: relative;
+        }
+        
+        .sidebar.collapsed .sidebar-menu-link[data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: calc(100% + 8px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--text-primary);
+            color: #fff;
+            padding: 0.25rem 0.625rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            z-index: 1100;
+            pointer-events: none;
+        }
+        
         .sidebar-menu-label {
             display: block;
             padding: 0.5rem 0.75rem;
@@ -920,7 +936,7 @@
                     @auth
                         @if(auth()->user()->hasPermission('dashboard.view'))
                         <li class="sidebar-menu-item">
-                            <a href="{{ route('dashboard') }}" class="sidebar-menu-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                            <a href="{{ route('dashboard') }}" class="sidebar-menu-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" data-tooltip="ダッシュボード">
                                 <svg class="sidebar-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="3" y="10" width="4" height="8" rx="1"/>
                                     <path d="M9 14l4-6 4 2"/>
@@ -933,7 +949,7 @@
                         
                         @if(auth()->user()->hasPermission('monthly_results.view'))
                         <li class="sidebar-menu-item">
-                            <a href="{{ route('monthly-results.index') }}" class="sidebar-menu-link {{ request()->routeIs('monthly-results.*') ? 'active' : '' }}">
+                            <a href="{{ route('monthly-results.index') }}" class="sidebar-menu-link {{ request()->routeIs('monthly-results.*') ? 'active' : '' }}" data-tooltip="月次実績入力">
                                 <svg class="sidebar-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M14.5 3.5l2 2L7 15H5v-2L14.5 3.5z"/>
                                     <path d="M12 6l2 2"/>
@@ -950,7 +966,7 @@
                     </li>
                     @if(auth()->user()->hasPermission('master.categories.view'))
                     <li class="sidebar-menu-item">
-                        <a href="{{ route('admin.categories.index') }}" class="sidebar-menu-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.categories.index') }}" class="sidebar-menu-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}" data-tooltip="カテゴリー管理">
                             <svg class="sidebar-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M2 6a2 2 0 012-2h4l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
                                 <path d="M7 11h6"/>
@@ -962,7 +978,7 @@
                     @endif
                     @if(auth()->user()->hasPermission('master.metrics.view'))
                     <li class="sidebar-menu-item">
-                        <a href="{{ route('admin.metrics.index') }}" class="sidebar-menu-link {{ request()->routeIs('admin.metrics.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.metrics.index') }}" class="sidebar-menu-link {{ request()->routeIs('admin.metrics.*') ? 'active' : '' }}" data-tooltip="指標マスタ管理">
                             <svg class="sidebar-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="6" cy="10" r="3"/>
                                 <path d="M6 10v.01"/>
@@ -976,7 +992,7 @@
                     @endif
                     @if(auth()->user()->hasPermission('users.view'))
                     <li class="sidebar-menu-item">
-                        <a href="{{ route('admin.users.index') }}" class="sidebar-menu-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.users.index') }}" class="sidebar-menu-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" data-tooltip="ユーザー管理">
                             <svg class="sidebar-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="6" cy="7" r="3"/>
                                 <path d="M1 17c0-2.8 2.2-5 5-5s5 2.2 5 5"/>
@@ -987,7 +1003,7 @@
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="{{ route('admin.activity-logs.index') }}" class="sidebar-menu-link {{ request()->routeIs('admin.activity-logs.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.activity-logs.index') }}" class="sidebar-menu-link {{ request()->routeIs('admin.activity-logs.*') ? 'active' : '' }}" data-tooltip="操作ログ">
                             <svg class="sidebar-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 4h14"/>
                                 <path d="M3 8h10"/>
@@ -1000,7 +1016,7 @@
                     @endif
                     <li class="sidebar-menu-divider"></li>
                     <li class="sidebar-menu-item">
-                        <a href="{{ route('data-export.index') }}" class="sidebar-menu-link {{ request()->routeIs('data-export.*') ? 'active' : '' }}">
+                        <a href="{{ route('data-export.index') }}" class="sidebar-menu-link {{ request()->routeIs('data-export.*') ? 'active' : '' }}" data-tooltip="データエクスポート">
                             <svg class="sidebar-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M13 2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7"/>
                                 <path d="M13 2l5 5v3"/>
@@ -1085,6 +1101,29 @@
         </main>
     </div>
 
+    <!-- ローディングオーバーレイ -->
+    <div id="loadingOverlay" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(2px);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    ">
+        <div style="text-align: center;">
+            <div style="width: 32px; height: 32px; border: 3px solid var(--border-color); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 0.75rem;"></div>
+            <div style="font-size: 0.8125rem; color: var(--text-secondary);">読み込み中...</div>
+        </div>
+    </div>
+    <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+
     <!-- 一番上に戻るボタン -->
     <button id="scrollToTopBtn" type="button" title="一番上に戻る" style="
         position: fixed;
@@ -1109,8 +1148,7 @@
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Chart.js はダッシュボード等で個別に読み込み -->
     <!-- Choices.js -->
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <!-- Axios (AJAX用) -->
@@ -1119,6 +1157,21 @@
     <script>
         // CSRFトークンをAxiosのデフォルトヘッダーに設定
         axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        // ページ遷移を伴うフォーム送信・selectのonchangeでローディング表示
+        (function() {
+            const overlay = document.getElementById('loadingOverlay');
+            document.querySelectorAll('select[onchange*="submit"]').forEach(function(sel) {
+                sel.addEventListener('change', function() {
+                    if (overlay) overlay.style.display = 'flex';
+                });
+            });
+            document.querySelectorAll('form[method="GET"]').forEach(function(form) {
+                form.addEventListener('submit', function() {
+                    if (overlay) overlay.style.display = 'flex';
+                });
+            });
+        })();
         
         // サイドバーの開閉制御
         document.addEventListener('DOMContentLoaded', function() {

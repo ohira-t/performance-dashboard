@@ -28,6 +28,9 @@
                             </select>
                         </form>
                     @endif
+                    <button type="button" id="saveAllBtn" class="btn btn-primary btn-sm" onclick="saveAll()" style="font-size: 0.875rem; padding: 0.375rem 1.25rem;">
+                        <i class="bi bi-check-all"></i> 全て保存
+                    </button>
                 </div>
             </div>
         </div>
